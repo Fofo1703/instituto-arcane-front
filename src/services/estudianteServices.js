@@ -1,22 +1,47 @@
 import axios from "axios";
+import axiosInstance from "./axiosInstance";
 import Swal from "sweetalert2";
 import { OBTENER_ESTUDIANTES, OBTENER_UN_ESTUDIANTE, INSERTAR_ESTUDIANTE, ACTUALIZAR_ESTUDIANTE, ELIMINAR_ESTUDIANTE } from "../assets/Api/apiLinks";
 
-export async function obtenerEstudiantes() {
-    const options = { method: 'GET', withCredentials: false, url: OBTENER_ESTUDIANTES };
 
-    return await axios.request(options).then(function (response) {
-        return response.data;
-    }).catch(function (error) {
-        Swal.fire({
-            icon: "error",
-            title: error.response?.data?.message,
-            showConfirmButton: false,
-            timer: 1500
-        });
-        return [];
-    });
+
+export async function obtenerEstudiantes() {
+  try {
+    const res = await axiosInstance.get(OBTENER_ESTUDIANTES);
+    return res.data;
+  } catch (error) {
+   if (error.isAuthError || error.response?.status === 401) {
+      // 🔐 Error de autenticación (por ejemplo, token inválido o expirado)
+      Swal.fire({
+        icon: "warning",
+        title: "Sesión expirada",
+        text: "Por favor, iniciá sesión de nuevo.",
+        showConfirmButton: true,
+      });
+      // También podrías redirigir al login si querés:
+      // window.location.href = "/";
+    } else if (error.response?.status === 403) {
+      // 🚫 Error de autorización (no tiene permisos)
+      Swal.fire({
+        icon: "error",
+        title: "Acceso denegado",
+        text: "No tenés permisos para ver esta información.",
+        showConfirmButton: true,
+      });
+    } else {
+      // ⚠️ Otro tipo de error (conexión, server 500, etc.)
+      Swal.fire({
+        icon: "error",
+        title: "Error al obtener estudiantes",
+        text: error.response?.data?.message || "Ocurrió un error inesperado.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+    return [];
+  }
 }
+
 
 export async function obtenerUnEstudiante(id) {
     const options = { method: "GET", withCredentials: false, url: OBTENER_UN_ESTUDIANTE + id };

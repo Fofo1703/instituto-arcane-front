@@ -1,4 +1,5 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback, } from 'react';
+import { useAuth } from '../../context/authContext';
 import Swal from 'sweetalert2';
 import { Button, Stack, Box, TextField } from '@mui/material';
 import { obtenerEstudiantes, eliminarEstudiante } from '../../services/estudianteServices';
@@ -18,30 +19,54 @@ import ListIcon from '@mui/icons-material/ListAlt';
 export default function ListaEstudiantes() {
     const [rows, setRows] = useState([]);
     const [filterText, setFilterText] = useState('');
+    const { accessToken, authReady } = useAuth();
 
-    const fetchEstudiantes = async () => {
-        
+    // const fetchEstudiantes = async () => {
+    //     try {
+    //         const data = await obtenerEstudiantes();
+    //         const horariosConId = data.map((item, index) => ({
+    //             ...item,
+    //             id: item.id || index,
+    //         }));
+    //         setRows(horariosConId);
+    //     } catch (error) {
+    //         Swal.fire({
+    //             icon: "error",
+    //             title: "Error al obtener cursos",
+    //             showConfirmButton: false,
+    //             timer: 1500
+    //         });
+
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     fetchEstudiantes();
+    // }, []);
+    const fetchEstudiantes = useCallback(() => {
         obtenerEstudiantes()
-              .then((data) => {
-                 const estudiantesConId = data.map((item, index) => ({
-                ...item,
-                id: item.id || index,
-            }));
-            setRows(estudiantesConId);
-              })
-              .catch((error) => {
+            .then((data) => {
+                const estudiantesConId = data.map((item, index) => ({
+                    ...item,
+                    id: item.id || index,
+                }));
+                setRows(estudiantesConId);
+            })
+            .catch(() => {
                 Swal.fire({
-                  icon: "error",
-                  title: "Error al obtener la informacion de los estudiante",
-                  showConfirmButton: false,
-                  timer: 1500
+                    icon: "error",
+                    title: "Error al obtener la información de los estudiantes",
+                    showConfirmButton: false,
+                    timer: 1500
                 });
-              });
-    };
+            });
+    }, []);
 
     useEffect(() => {
-        fetchEstudiantes();
-    }, []);
+        if (authReady && accessToken) {
+            fetchEstudiantes(); // ✅ solo cuando el token está listo
+        }
+    }, [authReady, accessToken, fetchEstudiantes]);
 
     const handleEliminar = async (id, cedNomb) => {
 
@@ -57,9 +82,9 @@ export default function ListaEstudiantes() {
 
         if (result.isConfirmed) {
             eliminarEstudiante(id)
-                .then(async(response) => {
+                .then(async (response) => {
                     if (response.success) {
-                      await  Swal.fire({
+                        await Swal.fire({
                             icon: "success",
                             title: response.message,
                             showConfirmButton: false,
@@ -93,7 +118,7 @@ export default function ListaEstudiantes() {
     const filteredRows = useMemo(() => {
         const normalizedFilter = filterText.toLowerCase();
         return rows.filter(row =>
-            [row.cedula, row.nombre, row.telefono, row.especialidad, row.subespecialidad]
+            [row.cedula, row.nombre, row.telefono, row.carrera]
                 .some(val => (val || '').toLowerCase().includes(normalizedFilter))
         );
     }, [rows, filterText]);
@@ -111,13 +136,12 @@ export default function ListaEstudiantes() {
         doc.text('Lista de Estudiantes', 14, 10);
 
         autoTable(doc, {
-            head: [['Cedula', 'Nombre', 'Teléfono', 'Especialidad', 'Subespecialidad']],
+            head: [['Cedula', 'Nombre', 'Teléfono', 'Carrera']],
             body: filteredRows.map(row => [
                 row.cedula,
                 row.nombre,
                 row.telefono,
-                row.especialidad,
-                row.subespecialidad,
+                row.carrera
             ]),
             startY: 20,
         });
@@ -129,8 +153,7 @@ export default function ListaEstudiantes() {
         { name: 'Cedula', selector: row => row.cedula, sortable: true, wrap: true, minWidth: '110px' },
         { name: 'Nombre', selector: row => row.nombre, sortable: true, wrap: true, minWidth: '200px' },
         { name: 'Telefono', selector: row => row.telefono, wrap: true, minWidth: '100px' },
-        { name: 'Especialidad', selector: row => row.especialidad, wrap: true, minWidth: '140px' },
-        { name: 'Subespecialidad', selector: row => row.subespecialidad, wrap: true, minWidth: '170px' },
+        { name: 'Especialidad', selector: row => row.carrera, wrap: true, minWidth: '240px' },
         {
             name: 'Acciones', minWidth: '730px',
             cell: row => (

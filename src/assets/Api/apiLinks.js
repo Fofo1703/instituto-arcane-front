@@ -1,4 +1,5 @@
-const URL = 'http://localhost:444/api/';
+const URL = 'http://localhost:444/api/v1/';
+const URL_LOGIN = URL + 'auth/';
 const URL_USUARIOS = URL + 'usuarios/';
 const URL_ESTUDIANTES = URL + 'estudiantes/';
 const URL_PROFESORES = URL + 'profesores/';
@@ -8,10 +9,10 @@ const URL_CURSOS_MATRICULADOS = URL + 'cursos-matriculados/';
 const URL_CURSOS_HISTORICOS = URL + 'cursos-historicos/';
 
 
-export const VALIDAR_CREDENCIALES = URL_USUARIOS + 'validarCredenciales';
+export const VALIDAR_CREDENCIALES = URL_LOGIN + 'login';
 export const RECORDAR_CREDENCIALES = URL_USUARIOS + 'recordarCredenciales';
 
-export const OBTENER_ESTUDIANTES = URL_ESTUDIANTES + 'getEstudiantes';
+export const OBTENER_ESTUDIANTES = URL_ESTUDIANTES + '';
 export const OBTENER_UN_ESTUDIANTE = URL_ESTUDIANTES + 'getEstudiante/';
 export const INSERTAR_ESTUDIANTE = URL_ESTUDIANTES + 'insertEstudiante';
 export const ACTUALIZAR_ESTUDIANTE = URL_ESTUDIANTES + 'updateEstudiante/';

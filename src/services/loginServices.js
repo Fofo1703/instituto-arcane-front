@@ -1,43 +1,31 @@
-import axios from "axios";
+import axiosInstance, { setAccessToken } from "./axiosInstance";
 import { VALIDAR_CREDENCIALES, RECORDAR_CREDENCIALES } from "../assets/Api/apiLinks";
 import Swal from "sweetalert2";
-
-// export async function validarCredenciales(usuario) {
-//   const options = {
-//     method: "POST",
-//     withCredentials: true,
-//     url: VALIDAR_CREDENCIALES,
-//     data: usuario,
-//   };
-
-//   return await axios
-//     .request(options)
-//     .then((response) => {
-//       localStorage.setItem("userToken", "usuario-logueado"); // puedes guardar un token real aquí
-//       return { success: true };
-//     })
-//     .catch((error) => {
-//       return { success: false, message: error.response?.data?.message || "Error al iniciar sesión" };
-//     });
-// }
+import { jwtDecode } from "jwt-decode";
 
 export async function validarCredenciales(usuario) {
   const options = {
     method: "POST",
     url: VALIDAR_CREDENCIALES,
     data: usuario,
-    withCredentials: true, // para enviar/recibir cookies HttpOnly
+    withCredentials: true,
   };
 
-  return axios
+  return axiosInstance
     .request(options)
     .then((response) => {
-      const { accessToken, usuario } = response.data;
+      const { accessToken } = response.data;
+      const payload = jwtDecode(accessToken);
+
+      // Guardamos el token en memoria
+      setAccessToken(accessToken);
+      sessionStorage.setItem("accessToken", accessToken);
+      sessionStorage.setItem("usuario", JSON.stringify(payload)); // 👉 guardamos usuario
 
       return {
         success: true,
         accessToken,
-        usuario, // Contiene correo, rol, nombre, etc.
+        usuario: payload,
       };
     })
     .catch((error) => {
@@ -48,29 +36,25 @@ export async function validarCredenciales(usuario) {
     });
 }
 
-
 export async function recordarCredenciales() {
-  const options = { method: "GET", withCredentials: false, url: RECORDAR_CREDENCIALES };
-
-  return await axios
-    .request(options)
+  return axiosInstance
+    .get(RECORDAR_CREDENCIALES)
     .then((response) => {
-      // Mostrar mensaje de éxito del backend
       Swal.fire({
         icon: "success",
-        title:response.data.message,
+        title: response.data.message,
         showConfirmButton: false,
         timer: 1500
       });
       return { success: true, message: response.data.message };
     })
     .catch((error) => {
-      // Capturar el mensaje del backend en caso de error
       Swal.fire({
         icon: "error",
-        title: error.response?.data?.message,
+        title: error.response?.data?.message || "Error",
         showConfirmButton: false,
         timer: 1500
       });
     });
 }
+

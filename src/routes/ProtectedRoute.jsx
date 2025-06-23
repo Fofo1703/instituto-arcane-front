@@ -1,18 +1,9 @@
-// import { Navigate, Outlet } from "react-router-dom";
-
-// const ProtectedRoute = ({ isAuthenticated }) => {
-//   return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
-// };
-
-// export default ProtectedRoute;
-
-// src/routes/ProtectedRoute.jsx
-import { useAuth } from "../context/authContext";
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = ({ roles }) => {
-  const { usuario } = useAuth();
-
+  const usuarioGuardado = sessionStorage.getItem("usuario");
+  const usuario = usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
+  
   if (!usuario) {
     // No autenticado, enviar a login
     return <Navigate to="/" />;
@@ -28,3 +19,4 @@ const ProtectedRoute = ({ roles }) => {
 };
 
 export default ProtectedRoute;
+
