@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { insertarEstudiante, obtenerUnEstudiante, actualizarEstudiante, } from "../../services/estudianteServices";
+import {
+  insertarEstudiante,
+  obtenerUnEstudiante,
+  actualizarEstudiante,
+} from "../../services/estudianteServices";
 import InputConValidacion from "../../components/inputConValidacion";
 import Navbar from "../../components/navbar/navbar";
 import Swal from "sweetalert2";
@@ -9,8 +13,9 @@ export default function FormEstudiante() {
     cedula: "",
     nombre: "",
     telefono: "",
-    especialidad: "",
-    subespecialidad: "",
+    carrera: "",
+    correo: "",
+    usuario: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -18,7 +23,6 @@ export default function FormEstudiante() {
   const id = searchParams.get("id");
 
   useEffect(() => {
-
     if (id) {
       obtenerUnEstudiante(id)
         .then((data) => {
@@ -26,8 +30,9 @@ export default function FormEstudiante() {
             cedula: data.cedula || "",
             nombre: data.nombre || "",
             telefono: data.telefono || "",
-            especialidad: data.especialidad || "",
-            subespecialidad: data.subespecialidad || "",
+            carrera: data.carrera || "",
+            correo: data.correo || "",
+            usuario: data.usuario || "",
           });
         })
         .catch((error) => {
@@ -35,17 +40,17 @@ export default function FormEstudiante() {
             icon: "error",
             title: "Error al obtener la informacion del estudiante",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
-
         });
     } else {
       setFormData({
         cedula: "",
         nombre: "",
         telefono: "",
-        especialidad: "",
-        subespecialidad: "",
+        carrera: "",
+        correo: "",
+        usuario: "",
       });
       setErrors({});
     }
@@ -75,6 +80,10 @@ export default function FormEstudiante() {
       newErrors.telefono = "El teléfono debe tener exactamente 8 dígitos";
     }
 
+    if (formData.usuario.trim() && !/^[a-zñ]+\.[a-zñ]+$/.test(formData.usuario)) {
+      newErrors.usuario ="Debe tener el formato nombre.apellidos, sin mayúsculas ni espacios ni caracteres especiales";
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -83,30 +92,28 @@ export default function FormEstudiante() {
     if (id) {
       actualizarEstudiante(id, formData)
         .then((response) => {
-          
           if (response.success) {
             Swal.fire({
               icon: "success",
               title: response.message,
               showConfirmButton: false,
-              timer: 1500
+              timer: 1500,
             });
           } else {
             Swal.fire({
               icon: "error",
               title: response.message,
               showConfirmButton: false,
-              timer: 1500
+              timer: 1500,
             });
           }
-
         })
         .catch((error) => {
           Swal.fire({
             icon: "error",
             title: "Error al actualizar el estudiante",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
         });
     } else {
@@ -117,31 +124,18 @@ export default function FormEstudiante() {
               cedula: "",
               nombre: "",
               telefono: "",
-              especialidad: "",
-              subespecialidad: "",
-            });
-            Swal.fire({
-              icon: "success",
-              title: response.message,
-              showConfirmButton: false,
-              timer: 1500
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: response.message,
-              showConfirmButton: false,
-              timer: 1500
+              carrera: "",
+              correo: "",
+              usuario: "",
             });
           }
-
         })
         .catch((error) => {
           Swal.fire({
             icon: "error",
             title: "Error al registrar el estudiante",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
         });
     }
@@ -208,33 +202,48 @@ export default function FormEstudiante() {
             />
 
             <InputConValidacion
-              id="especialidad"
-              name="especialidad"
-              label="Especialidad"
-              value={formData.especialidad}
+              id="carrera"
+              name="carrera"
+              label="Carrera"
+              value={formData.carrera}
               onChange={handleChange}
-              placeholder="Ingrese la especialidad"
+              placeholder="Ingrese la carerera"
               requerido
-              validacion="alfanumerico"
+              validacion="texto"
               inputProps={{ maxLength: 50 }}
               inputClassName="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               labelClassName="block text-gray-700 text-sm font-bold mb-2"
-              error={errors.especialidad}
+              error={errors.carrera}
             />
 
             <InputConValidacion
-              id="subespecialidad"
-              name="subespecialidad"
-              label="Subespecialidad"
-              value={formData.subespecialidad}
+              id="correo"
+              name="correo"
+              label="Correo"
+              value={formData.correo}
               onChange={handleChange}
-              placeholder="Ingrese la subespecialidad"
+              placeholder="Ingrese el correo"
               requerido
-              validacion="alfanumerico"
+              validacion="email"
               inputProps={{ maxLength: 50 }}
               inputClassName="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               labelClassName="block text-gray-700 text-sm font-bold mb-2"
-              error={errors.subespecialidad}
+              error={errors.correo}
+            />
+
+            <InputConValidacion
+              id="usuario"
+              name="usuario"
+              label="Usuario"
+              value={formData.usuario}
+              onChange={handleChange}
+              placeholder="Ej: nombre.apellidos"
+              requerido
+              validacion="usuario"
+              inputProps={{ maxLength: 50 }}
+              inputClassName="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              labelClassName="block text-gray-700 text-sm font-bold mb-2"
+              error={errors.usuario}
             />
 
             <div className="mt-8 flex flex-col gap-y-4">
@@ -251,4 +260,3 @@ export default function FormEstudiante() {
     </>
   );
 }
-

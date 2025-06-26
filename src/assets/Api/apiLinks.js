@@ -14,7 +14,7 @@ export const RECORDAR_CREDENCIALES = URL_USUARIOS + 'recordarCredenciales';
 
 export const OBTENER_ESTUDIANTES = URL_ESTUDIANTES + '';
 export const OBTENER_UN_ESTUDIANTE = URL_ESTUDIANTES + 'getEstudiante/';
-export const INSERTAR_ESTUDIANTE = URL_ESTUDIANTES + 'insertEstudiante';
+export const INSERTAR_ESTUDIANTE = URL_ESTUDIANTES + 'registro-estudiante';
 export const ACTUALIZAR_ESTUDIANTE = URL_ESTUDIANTES + 'updateEstudiante/';
 export const ELIMINAR_ESTUDIANTE = URL_ESTUDIANTES + 'deleteEstudiante/';
 

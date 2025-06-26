@@ -26,21 +26,19 @@ const PublicRoutes = () => {
           <Route path="/estudiantes/registro" element={<FormEstudiante />} />
           <Route path="/profesores/listaProfesores" element={<ListaProfesores />} />
           <Route path="/formsProfesoresCursos/registro" element={<FormProfesoresCursosHorarios />} />
-          <Route path="/horarios/registro" element={<FormHorarios />} />
-          <Route path="/cursos/listaCursos" element={<ListaCursos />} />
-          <Route path="/horarios/listaHorarios" element={<ListaHorarios />} />
           <Route path="/estudiantes/matricularEstudiante" element={<FormMatriculacion />} />
           <Route path="/estudiantes/listaEstudianteCursos" element={<ListaEstudianteCursos />} />
           <Route path="/estudiantes/notasAusencias" element={<NotasAusencias />} />
+          <Route path="/horarios/registro" element={<FormHorarios />} />
+          <Route path="/cursos/listaCursos" element={<ListaCursos />} />
+          <Route path="/horarios/listaHorarios" element={<ListaHorarios />} />
         </Route>
 
         {/* Rutas protegidas con restricción por rol */}
         <Route element={<ProtectedRoute roles={["administrador","encargado-registro"]} />}>
-          {/* Solo administradores */}
-          {/* <Route path="/admin" element={<AdminPage />} /> */}
-          <Route path="/horarios/registro" element={<FormHorarios />} />
+          {/* <Route path="/horarios/registro" element={<FormHorarios />} />
           <Route path="/cursos/listaCursos" element={<ListaCursos />} />
-          <Route path="/horarios/listaHorarios" element={<ListaHorarios />} />
+          <Route path="/horarios/listaHorarios" element={<ListaHorarios />} /> */}
         </Route>
 
         <Route path="/no-autorizado" element={<NoAutorizado />} />

@@ -20,6 +20,8 @@ export default function InputConValidacion({
     if (validacion === "texto" && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(value)) return false;
     if (validacion === "alfanumerico" && !/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]*$/.test(value)) return false;
     if (validacion === "ciclo" && !/^[I0-9-\s]*$/.test(value)) return false;
+    if (validacion === "usuario" && !/^[a-zñ.]*$/.test(value)) return false
+
     return true;
   };
 
@@ -39,7 +41,7 @@ export default function InputConValidacion({
       <input
         id={id}
         name={name}
-        type="text"
+        type={validacion === "email" ? "email" : "text"} 
         value={value}
         onChange={handleOnChange}
         placeholder={placeholder}
