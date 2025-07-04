@@ -33,7 +33,7 @@ export async function obtenerEstudiantes() {
           showConfirmButton: true,
         });
         // También podrías redirigir al login si querés:
-        // window.location.href = "/";
+        window.location.href = "/";
       } else if (error.response?.status === 403) {
         // 🚫 Error de autorización (no tiene permisos)
         Swal.fire({
