@@ -1,11 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ importar useNavigate
+import { logoutUsuario } from "../services/loginServices";
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
   const [usuario, setUsuario] = useState(null);
-  const [authReady, setAuthReady] = useState(false); // 👈 nuevo
+  const [authReady, setAuthReady] = useState(false);
+
+  const navigate = useNavigate(); // ✅ hook de navegación
 
   const login = (token, userInfo) => {
     setAccessToken(token);
@@ -15,12 +19,31 @@ export const AuthProvider = ({ children }) => {
     setAuthReady(true);
   };
 
-  const logout = () => {
-    setAccessToken(null);
-    setUsuario(null);
-    sessionStorage.removeItem("accessToken");
-    sessionStorage.removeItem("usuario");
-    setAuthReady(false);
+  const logout = async () => {
+    try {
+      const result = await logoutUsuario(); // llamada al backend
+      if (result.success) {
+        // limpiar estado local
+        setAccessToken(null);
+        setUsuario(null);
+        sessionStorage.removeItem("accessToken");
+        sessionStorage.removeItem("usuario");
+        setAuthReady(false);
+
+        // redirigir al login
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error en logout:", error);
+
+      // incluso si hay error, limpiar estado y redirigir
+      setAccessToken(null);
+      setUsuario(null);
+      sessionStorage.removeItem("accessToken");
+      sessionStorage.removeItem("usuario");
+      setAuthReady(false);
+      navigate("/login");
+    }
   };
 
   useEffect(() => {
@@ -32,7 +55,7 @@ export const AuthProvider = ({ children }) => {
       setUsuario(JSON.parse(usuarioGuardado));
     }
 
-    setAuthReady(true); // 👉 se activa al finalizar el chequeo inicial
+    setAuthReady(true);
   }, []);
 
   return (
@@ -43,4 +66,3 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-

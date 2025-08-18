@@ -1,7 +1,8 @@
 import axiosInstance, { setAccessToken } from "./axiosInstance";
-import { VALIDAR_CREDENCIALES, RECORDAR_CREDENCIALES } from "../assets/Api/apiLinks";
+import { VALIDAR_CREDENCIALES, LOGOUT, RECORDAR_CREDENCIALES } from "../assets/Api/apiLinks";
 import Swal from "sweetalert2";
 import { jwtDecode } from "jwt-decode";
+
 
 export async function validarCredenciales(usuario) {
   const options = {
@@ -35,6 +36,28 @@ export async function validarCredenciales(usuario) {
       };
     });
 }
+
+export async function logoutUsuario() {
+  const usuario = JSON.parse(sessionStorage.getItem("usuario"));
+  const options = {
+    method: "POST",
+    url: LOGOUT,
+    data: usuario,
+    withCredentials: true,
+  };
+
+  return axiosInstance
+    .request(options)
+    .then((response) => {
+      return { success: true };
+    })
+    .catch((error) => {
+      Swal.fire("Error", error.response?.data?.message || "Error al cerrar sesión", "error");
+      return { success: false };
+    });
+}
+
+
 
 export async function recordarCredenciales() {
   return axiosInstance

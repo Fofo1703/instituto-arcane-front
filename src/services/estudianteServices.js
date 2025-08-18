@@ -10,7 +10,6 @@ import {
 } from "../assets/Api/apiLinks";
 
 export async function obtenerEstudiantes() {
-  console.log(OBTENER_ESTUDIANTES);
 
   const options = {
     method: "GET",
