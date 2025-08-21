@@ -21,6 +21,7 @@ export default function InputConValidacion({
     if (validacion === "alfanumerico" && !/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]*$/.test(value)) return false;
     if (validacion === "ciclo" && !/^[I0-9-\s]*$/.test(value)) return false;
     if (validacion === "usuario" && !/^[a-zñ.]*$/.test(value)) return false
+    if (validacion === "password" && !/^[a-zA-Z0-9]*$/.test(value)) return false
 
     return true;
   };

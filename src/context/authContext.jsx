@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
       sessionStorage.removeItem("accessToken");
       sessionStorage.removeItem("usuario");
       setAuthReady(false);
-      navigate("/login");
+      navigate("/");
     }
   };
 
@@ -58,6 +58,8 @@ export const AuthProvider = ({ children }) => {
     setAuthReady(true);
   }, []);
 
+
+
   return (
     <AuthContext.Provider value={{ accessToken, usuario, login, logout, authReady }}>
       {children}
@@ -66,3 +68,4 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+

@@ -16,6 +16,7 @@ export default function FormEstudiante() {
     carrera: "",
     correo: "",
     usuario: "",
+    password: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -33,6 +34,7 @@ export default function FormEstudiante() {
             carrera: data.carrera || "",
             correo: data.correo || "",
             usuario: data.usuario || "",
+            password: data.password || "",
           });
         })
         .catch((error) => {
@@ -51,6 +53,7 @@ export default function FormEstudiante() {
         carrera: "",
         correo: "",
         usuario: "",
+        password: "",
       });
       setErrors({});
     }
@@ -81,7 +84,7 @@ export default function FormEstudiante() {
     }
 
     if (formData.usuario.trim() && !/^[a-zñ]+\.[a-zñ]+$/.test(formData.usuario)) {
-      newErrors.usuario ="Debe tener el formato nombre.apellidos, sin mayúsculas ni espacios ni caracteres especiales";
+      newErrors.usuario = "Debe tener el formato nombre.apellidos, sin mayúsculas ni espacios ni caracteres especiales";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -127,6 +130,7 @@ export default function FormEstudiante() {
               carrera: "",
               correo: "",
               usuario: "",
+              password: "",
             });
           }
         })
@@ -237,7 +241,7 @@ export default function FormEstudiante() {
               label="Usuario"
               value={formData.usuario}
               onChange={handleChange}
-              placeholder="Ej: nombre.apellidos"
+              placeholder="Ej: nombre.apellido1.apellido2"
               requerido
               validacion="usuario"
               inputProps={{ maxLength: 50 }}
@@ -246,6 +250,20 @@ export default function FormEstudiante() {
               error={errors.usuario}
             />
 
+            <InputConValidacion
+              id="password"
+              name="password"
+              label="Password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="password"
+              requerido
+              validacion="password"
+              inputProps={{ maxLength: 50 }}
+              inputClassName="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              labelClassName="block text-gray-700 text-sm font-bold mb-2"
+              error={errors.password}
+            />
             <div className="mt-8 flex flex-col gap-y-4">
               <button
                 type="submit"

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { insertarHorario, obtenerUnHorario, actualizarHorario } from "../../services/horariosServices";
-import { obtenerProfesores } from "../../services/profesoresServices";
+import { obtenerEmpleados } from "../../services/empleadosServices";
 import { obtenerCursos } from "../../services/cursosServices";
 import InputConValidacion from "../../components/inputConValidacion";
 import SelectConValidacion from "../../components/selectConValidacion";
@@ -30,7 +30,7 @@ export default function FormHorarios() {
 
   useEffect(() => {
     // Obtener lista de profesores
-    obtenerProfesores()
+    obtenerEmpleados()
       .then((data) => {
         const profesoresConOpcionVacia = [{ id: "", nombre: "Seleccione una opción" }, ...(data || [])];
         setProfesores(profesoresConOpcionVacia);
@@ -226,11 +226,11 @@ export default function FormHorarios() {
               onChange={handleChange}
               requerido
               options={[
-                "Lunes",
-                "Martes",
-                "Miércoles",
-                "Jueves",
-                "Viernes"
+                { label: "Lunes", value: "Lunes" },
+                { label: "Martes", value: "Martes" },
+                { label: "Miércoles", value: "Miércoles" },
+                { label: "Jueves", value: "Jueves" },
+                { label: "Viernes", value: "Viernes" },
               ]}
               selectClassName="text-sm"
               labelClassName="block text-gray-700 text-sm font-bold mb-2"

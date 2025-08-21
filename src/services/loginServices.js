@@ -37,8 +37,10 @@ export async function validarCredenciales(usuario) {
     });
 }
 
+
 export async function logoutUsuario() {
   const usuario = JSON.parse(sessionStorage.getItem("usuario"));
+ 
   const options = {
     method: "POST",
     url: LOGOUT,

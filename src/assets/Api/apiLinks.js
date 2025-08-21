@@ -2,7 +2,7 @@ const URL = 'http://localhost:444/api/v1/';
 const URL_LOGIN = URL + 'auth/';
 const URL_USUARIOS = URL + 'usuarios/';
 const URL_ESTUDIANTES = URL + 'estudiantes/';
-const URL_PROFESORES = URL + 'profesores/';
+const URL_EMPLEADOS = URL + 'empleados/';
 const URL_CURSOS = URL + 'cursos/';
 const URL_HORARIOS = URL + 'horarios/';
 const URL_CURSOS_MATRICULADOS = URL + 'cursos-matriculados/';
@@ -19,11 +19,11 @@ export const INSERTAR_ESTUDIANTE = URL_ESTUDIANTES + 'registro-estudiante';
 export const ACTUALIZAR_ESTUDIANTE = URL_ESTUDIANTES + 'updateEstudiante/';
 export const ELIMINAR_ESTUDIANTE = URL_ESTUDIANTES + 'deleteEstudiante/';
 
-export const OBTENER_PROFESORES = URL_PROFESORES + 'getProfesores';
-export const OBTENER_UN_PROFESOR = URL_PROFESORES + 'getProfesor/';
-export const INSERTAR_PROFESOR = URL_PROFESORES + 'insertProfesor';
-export const ACTUALIZAR_PROFESOR = URL_PROFESORES + 'updateProfesor/';
-export const ELIMINAR_PROFESOR = URL_PROFESORES + 'deleteProfesor/';
+export const OBTENER_EMPLEADOS = URL_EMPLEADOS + 'getEmpleados';
+export const OBTENER_UN_EMPLEADO = URL_EMPLEADOS + 'getEmpleado/';
+export const INSERTAR_EMPLEADO = URL_EMPLEADOS + 'registro-empleado';
+export const ACTUALIZAR_EMPLEADO = URL_EMPLEADOS + 'updateEmpleado/';
+export const ELIMINAR_EMPLEADO = URL_EMPLEADOS + 'deleteEmpleado/';
 
 export const OBTENER_CURSOS = URL_CURSOS + 'getCursos';
 export const OBTENER_UN_CURSO = URL_CURSOS + 'getCurso/';

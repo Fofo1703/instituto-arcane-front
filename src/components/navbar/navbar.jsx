@@ -66,11 +66,11 @@ export default function Navbar() {
       ],
     },
     {
-      name: "profesores",
-      title: "Profesores",
+      name: "empleados",
+      title: "Empleados",
       links: [
-        { label: "Listar profesores", to: "/profesores/listaProfesores" },
-        { label: "Registrar profesor", to: "/formsProfesoresCursos/registro" },
+        { label: "Listar empleados", to: "/empleados/listaEmpleados" },
+        { label: "Registrar empleado", to: "/empleados/registro" },
       ],
     },
     {
@@ -78,7 +78,7 @@ export default function Navbar() {
       title: "Cursos",
       links: [
         { label: "Listar cursos", to: "/cursos/listaCursos" },
-        { label: "Registrar curso", to: "/formsProfesoresCursos/registro" },
+        { label: "Registrar curso", to: "/cursos/registro" },
       ],
     },
     {

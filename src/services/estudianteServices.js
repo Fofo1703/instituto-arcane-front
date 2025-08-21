@@ -55,42 +55,7 @@ export async function obtenerEstudiantes() {
     });
 }
 
-// export async function obtenerEstudiantes() {
-//   try {
-//     const res = await axiosInstance.get(OBTENER_ESTUDIANTES);
-//     return res.data;
-//   } catch (error) {
-//    if (error.isAuthError || error.response?.status === 401) {
-//       // 🔐 Error de autenticación (por ejemplo, token inválido o expirado)
-//      await Swal.fire({
-//         icon: "warning",
-//         title: "Sesión expirada",
-//         text: "Por favor, iniciá sesión de nuevo.",
-//         showConfirmButton: true,
-//       });
-//       // También podrías redirigir al login si querés:
-//       // window.location.href = "/";
-//     } else if (error.response?.status === 403) {
-//       // 🚫 Error de autorización (no tiene permisos)
-//       Swal.fire({
-//         icon: "error",
-//         title: "Acceso denegado",
-//         text: "No tenés permisos para ver esta información.",
-//         showConfirmButton: true,
-//       });
-//     } else {
-//       // ⚠️ Otro tipo de error (conexión, server 500, etc.)
-//       Swal.fire({
-//         icon: "error",
-//         title: "Error al obtener estudiantes",
-//         text: error.response?.data?.message || "Ocurrió un error inesperado.",
-//         showConfirmButton: false,
-//         timer: 1500,
-//       });
-//     }
-//     return [];
-//   }
-// }
+
 
 export async function obtenerUnEstudiante(id) {
   const options = {

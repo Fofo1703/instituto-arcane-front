@@ -23,14 +23,18 @@ export default function SelectConValidacion({
         name={name}
         value={value}
         onChange={onChange}
-        className={`${selectClassName} ${
-          error ? "border-red-500" : "border-gray-300"
-        } shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+        className={`${selectClassName} ${error ? "border-red-500" : "border-gray-300"
+          } shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
       >
-        <option value="">Seleccione una opción</option>
+        {/* <option value="">Seleccione una opción</option>
         {options.map((opcion) => (
           <option key={opcion} value={opcion}>
             {opcion}
+          </option> */}
+        <option value="">Seleccione una opción</option>
+        {options.map((opcion) => (
+          <option key={opcion.value} value={opcion.value}>
+            {opcion.label}
           </option>
         ))}
       </select>
