@@ -16,7 +16,6 @@ export default function FormEstudiante() {
     carrera: "",
     correo: "",
     usuario: "",
-    password: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -27,6 +26,7 @@ export default function FormEstudiante() {
     if (id) {
       obtenerUnEstudiante(id)
         .then((data) => {
+          
           setFormData({
             cedula: data.cedula || "",
             nombre: data.nombre || "",
@@ -34,7 +34,6 @@ export default function FormEstudiante() {
             carrera: data.carrera || "",
             correo: data.correo || "",
             usuario: data.usuario || "",
-            password: data.password || "",
           });
         })
         .catch((error) => {
@@ -53,7 +52,6 @@ export default function FormEstudiante() {
         carrera: "",
         correo: "",
         usuario: "",
-        password: "",
       });
       setErrors({});
     }
@@ -65,7 +63,7 @@ export default function FormEstudiante() {
     setErrors({ ...errors, [id]: "" });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     let newErrors = {};
 
@@ -93,55 +91,68 @@ export default function FormEstudiante() {
     }
 
     if (id) {
-      actualizarEstudiante(id, formData)
-        .then((response) => {
-          if (response.success) {
-            Swal.fire({
-              icon: "success",
-              title: response.message,
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: response.message,
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          }
-        })
-        .catch((error) => {
-          Swal.fire({
+      try {
+        await actualizarEstudiante(id, formData);
+      } catch (error) {
+        Swal.fire({
             icon: "error",
             title: "Error al actualizar el estudiante",
             showConfirmButton: false,
             timer: 1500,
           });
-        });
+      }
+      // actualizarEstudiante(id, formData)
+      //   .then(() => {})
+      //   .catch((error) => {
+      //     Swal.fire({
+      //       icon: "error",
+      //       title: "Error al actualizar el estudiante",
+      //       showConfirmButton: false,
+      //       timer: 1500,
+      //     });
+      //   });
     } else {
-      insertarEstudiante(formData)
-        .then((response) => {
-          if (response.success) {
-            setFormData({
-              cedula: "",
-              nombre: "",
-              telefono: "",
-              carrera: "",
-              correo: "",
-              usuario: "",
-              password: "",
-            });
-          }
-        })
-        .catch((error) => {
-          Swal.fire({
+      try {
+        const result = await insertarEstudiante(formData);
+        if (result.success) {
+          setFormData({
+            cedula: "",
+            nombre: "",
+            telefono: "",
+            carrera: "",
+            correo: "",
+            usuario: "",
+          });
+        }
+      } catch (error) {
+        Swal.fire({
             icon: "error",
             title: "Error al registrar el estudiante",
             showConfirmButton: false,
             timer: 1500,
           });
-        });
+      }
+      // insertarEstudiante(formData)
+      //   .then((response) => {
+      //     if (response.success) {
+      //       setFormData({
+      //         cedula: "",
+      //         nombre: "",
+      //         telefono: "",
+      //         carrera: "",
+      //         correo: "",
+      //         usuario: "",
+      //       });
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     Swal.fire({
+      //       icon: "error",
+      //       title: "Error al registrar el estudiante",
+      //       showConfirmButton: false,
+      //       timer: 1500,
+      //     });
+      //   });
     }
   };
 
@@ -229,7 +240,7 @@ export default function FormEstudiante() {
               placeholder="Ingrese el correo"
               requerido
               validacion="email"
-              inputProps={{ maxLength: 50 }}
+              inputProps={{ maxLength: 70 }}
               inputClassName="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               labelClassName="block text-gray-700 text-sm font-bold mb-2"
               error={errors.correo}
@@ -250,20 +261,6 @@ export default function FormEstudiante() {
               error={errors.usuario}
             />
 
-            <InputConValidacion
-              id="password"
-              name="password"
-              label="Password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="password"
-              requerido
-              validacion="password"
-              inputProps={{ maxLength: 50 }}
-              inputClassName="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              labelClassName="block text-gray-700 text-sm font-bold mb-2"
-              error={errors.password}
-            />
             <div className="mt-8 flex flex-col gap-y-4">
               <button
                 type="submit"

@@ -3,7 +3,7 @@ import { VALIDAR_CREDENCIALES, LOGOUT, RECORDAR_CREDENCIALES } from "../assets/A
 import Swal from "sweetalert2";
 import { jwtDecode } from "jwt-decode";
 
-
+// 🔹 Login normal
 export async function validarCredenciales(usuario) {
   const options = {
     method: "POST",
@@ -20,9 +20,10 @@ export async function validarCredenciales(usuario) {
 
       // Guardamos el token en memoria
       setAccessToken(accessToken);
-      sessionStorage.setItem("accessToken", accessToken);
-      sessionStorage.setItem("usuario", JSON.stringify(payload)); // 👉 guardamos usuario
 
+      // Opcional: persistir solo el usuario en sessionStorage
+      sessionStorage.setItem("usuario", JSON.stringify(payload));
+        
       return {
         success: true,
         accessToken,
@@ -37,29 +38,39 @@ export async function validarCredenciales(usuario) {
     });
 }
 
-
+// 🔹 Logout
 export async function logoutUsuario() {
-  const usuario = JSON.parse(sessionStorage.getItem("usuario"));
- 
-  const options = {
-    method: "POST",
-    url: LOGOUT,
-    data: usuario,
-    withCredentials: true,
-  };
-
-  return axiosInstance
-    .request(options)
-    .then((response) => {
-      return { success: true };
-    })
-    .catch((error) => {
-      Swal.fire("Error", error.response?.data?.message || "Error al cerrar sesión", "error");
-      return { success: false };
-    });
+  try {
+    const res = await axiosInstance.post(LOGOUT, {}, { withCredentials: true });
+    Swal.fire("Sesión cerrada", res.data.message, "success");
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Error al cerrar sesión",
+    };
+  }
 }
 
+// 🔹 Verificar sesión con refresh token (se llama al cargar la app)
+export async function verificarSesion() {
+  try {
+    const res = await axiosInstance.post(
+      "/auth/refresh",
+      {},
+      { withCredentials: true }
+    );
+    const { accessToken } = res.data;
+    const payload = jwtDecode(accessToken);
 
+    setAccessToken(accessToken);
+    sessionStorage.setItem("usuario", JSON.stringify(payload));
+
+    return { ok: true, usuario: payload };
+  } catch {
+    return { ok: false };
+  }
+}
 
 export async function recordarCredenciales() {
   return axiosInstance
@@ -82,4 +93,3 @@ export async function recordarCredenciales() {
       });
     });
 }
-

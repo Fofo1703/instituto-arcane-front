@@ -19,33 +19,13 @@ import ListIcon from '@mui/icons-material/ListAlt';
 export default function ListaEstudiantes() {
     const [rows, setRows] = useState([]);
     const [filterText, setFilterText] = useState('');
-    const { accessToken, authReady } = useAuth();
+    const { authReady } = useAuth();
 
-    // const fetchEstudiantes = async () => {
-    //     try {
-    //         const data = await obtenerEstudiantes();
-    //         const horariosConId = data.map((item, index) => ({
-    //             ...item,
-    //             id: item.id || index,
-    //         }));
-    //         setRows(horariosConId);
-    //     } catch (error) {
-    //         Swal.fire({
-    //             icon: "error",
-    //             title: "Error al obtener cursos",
-    //             showConfirmButton: false,
-    //             timer: 1500
-    //         });
-
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     fetchEstudiantes();
-    // }, []);
     const fetchEstudiantes = useCallback(() => {
         obtenerEstudiantes()
             .then((data) => {
+                console.log(data);
+                
                 const estudiantesConId = data.map((item, index) => ({
                     ...item,
                     id: item.id || index,
@@ -63,10 +43,11 @@ export default function ListaEstudiantes() {
     }, []);
 
     useEffect(() => {
-        if (authReady && accessToken) {
+
+        if (authReady) {
             fetchEstudiantes(); // ✅ solo cuando el token está listo
         }
-    }, [authReady, accessToken, fetchEstudiantes]);
+    }, [authReady, fetchEstudiantes]);
 
     const handleEliminar = async (id, cedNomb) => {
 
@@ -91,15 +72,7 @@ export default function ListaEstudiantes() {
                             timer: 1500
                         });
                         fetchEstudiantes();
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: response.message,
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
                     }
-
                 })
                 .catch((error) => {
                     Swal.fire({
@@ -110,8 +83,6 @@ export default function ListaEstudiantes() {
                     });
                 });
         }
-
-
 
     };
 
@@ -150,10 +121,11 @@ export default function ListaEstudiantes() {
     };
 
     const columns = [
-        { name: 'Cedula', selector: row => row.cedula, sortable: true, wrap: true, minWidth: '110px' },
+        { name: 'Cédula', selector: row => row.cedula, sortable: true, wrap: true, minWidth: '110px' },
         { name: 'Nombre', selector: row => row.nombre, sortable: true, wrap: true, minWidth: '200px' },
-        { name: 'Telefono', selector: row => row.telefono, wrap: true, minWidth: '100px' },
-        { name: 'Especialidad', selector: row => row.carrera, wrap: true, minWidth: '240px' },
+        { name: 'Teléfono', selector: row => row.telefono, wrap: true, minWidth: '100px' },
+        { name: 'Corrreo', selector: row => row.correo, wrap: true, minWidth: '350px' },
+        { name: 'Carrera', selector: row => row.carrera, wrap: true, minWidth: '240px' },
         {
             name: 'Acciones', minWidth: '730px',
             cell: row => (
@@ -238,7 +210,7 @@ export default function ListaEstudiantes() {
                             highlightOnHover
                             striped
                             responsive={true}
-                            noDataComponent="No se encontraron horarios"
+                            noDataComponent="No se encontraron estudiantes"
                             customStyles={customStyles}
                         />
                     </Box>

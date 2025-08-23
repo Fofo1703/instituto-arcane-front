@@ -13,11 +13,11 @@ export const VALIDAR_CREDENCIALES = URL_LOGIN + 'login';
 export const RECORDAR_CREDENCIALES = URL_USUARIOS + 'recordarCredenciales';
 export const LOGOUT = URL_LOGIN + 'logout';
 
-export const OBTENER_ESTUDIANTES = URL_ESTUDIANTES + '';
+export const OBTENER_ESTUDIANTES = URL_ESTUDIANTES + 'getEstudiantes/';
 export const OBTENER_UN_ESTUDIANTE = URL_ESTUDIANTES + 'getEstudiante/';
-export const INSERTAR_ESTUDIANTE = URL_ESTUDIANTES + 'registro-estudiante';
-export const ACTUALIZAR_ESTUDIANTE = URL_ESTUDIANTES + 'updateEstudiante/';
-export const ELIMINAR_ESTUDIANTE = URL_ESTUDIANTES + 'deleteEstudiante/';
+export const INSERTAR_ESTUDIANTE = URL_ESTUDIANTES + 'estudiante-usuario/';
+export const ACTUALIZAR_ESTUDIANTE = URL_ESTUDIANTES + 'estudiante-usuario/';
+export const ELIMINAR_ESTUDIANTE = URL_ESTUDIANTES + 'estudiante-usuario/';
 
 export const OBTENER_EMPLEADOS = URL_EMPLEADOS + 'getEmpleados';
 export const OBTENER_UN_EMPLEADO = URL_EMPLEADOS + 'getEmpleado/';

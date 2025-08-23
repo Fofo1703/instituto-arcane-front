@@ -1,67 +1,50 @@
+
+
 import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ importar useNavigate
-import { logoutUsuario } from "../services/loginServices";
+import { useNavigate } from "react-router-dom";
+import { logoutUsuario, verificarSesion } from "../services/loginServices";
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [accessToken, setAccessToken] = useState(null);
-  const [usuario, setUsuario] = useState(null);
   const [authReady, setAuthReady] = useState(false);
+  const [usuario, setUsuario] = useState(null);
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // ✅ hook de navegación
-
-  const login = (token, userInfo) => {
-    setAccessToken(token);
+  const login = ( userInfo) => {
     setUsuario(userInfo);
-    sessionStorage.setItem("accessToken", token);
-    sessionStorage.setItem("usuario", JSON.stringify(userInfo));
     setAuthReady(true);
   };
 
   const logout = async () => {
     try {
-      const result = await logoutUsuario(); // llamada al backend
-      if (result.success) {
-        // limpiar estado local
-        setAccessToken(null);
-        setUsuario(null);
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("usuario");
-        setAuthReady(false);
-
-        // redirigir al login
-        navigate("/");
-      }
-    } catch (error) {
-      console.error("Error en logout:", error);
-
-      // incluso si hay error, limpiar estado y redirigir
-      setAccessToken(null);
-      setUsuario(null);
-      sessionStorage.removeItem("accessToken");
+      await logoutUsuario();
+    } catch (err) {
+      console.error("Error en logout:", err);
+    } finally {
       sessionStorage.removeItem("usuario");
+      setUsuario(null);
       setAuthReady(false);
       navigate("/");
     }
   };
 
   useEffect(() => {
-    const tokenGuardado = sessionStorage.getItem("accessToken");
-    const usuarioGuardado = sessionStorage.getItem("usuario");
-
-    if (tokenGuardado && usuarioGuardado) {
-      setAccessToken(tokenGuardado);
-      setUsuario(JSON.parse(usuarioGuardado));
+    async function checkSesion() {
+      const res = await verificarSesion();
+      if (res.ok) {
+        setUsuario(res.usuario);
+        setAuthReady(true);
+      } else {
+        setUsuario(null);
+        setAuthReady(true);
+      }
     }
-
-    setAuthReady(true);
+    checkSesion();
   }, []);
 
-
-
   return (
-    <AuthContext.Provider value={{ accessToken, usuario, login, logout, authReady }}>
+    <AuthContext.Provider value={{ login, logout, authReady, usuario }}>
       {children}
     </AuthContext.Provider>
   );

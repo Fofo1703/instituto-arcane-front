@@ -14,7 +14,7 @@ const axiosInstance = axios.create({
 // Interceptor de solicitudes: agrega el token si está disponible
 axiosInstance.interceptors.request.use((config) => {
   // ✅ Fallback por si no está seteado aún el token en memoria
-  const token = accessToken || sessionStorage.getItem("accessToken");
+  const token = accessToken || localStorage.getItem("accessToken");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -47,7 +47,7 @@ axiosInstance.interceptors.response.use(
 
         // Guardar nuevo token
         setAccessToken(nuevoAccessToken);
-        sessionStorage.setItem("accessToken", nuevoAccessToken);
+        localStorage.setItem("accessToken", nuevoAccessToken);
 
         // Reintentar la solicitud original con el nuevo token
         originalRequest.headers.Authorization = `Bearer ${nuevoAccessToken}`;

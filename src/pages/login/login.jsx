@@ -34,7 +34,11 @@ export default function Login() {
     validarCredenciales(credenciales)
       .then((response) => {
         if (response.success) {
-          login(response.accessToken, response.usuario); // Guarda el token y datos en contexto
+        
+          // ✅ Guardamos usuario en el contexto (el accessToken ya está en memoria por loginServices)
+          login(response.usuario);
+
+          // Redirigir a la página inicial
           navigate("/estudiantes/listaEstudiantes");
         } else {
           Swal.fire({
