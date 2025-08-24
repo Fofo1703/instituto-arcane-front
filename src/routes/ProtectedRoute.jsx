@@ -1,15 +1,9 @@
-
-
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 
 const ProtectedRoute = ({ roles }) => {
   const { usuario, authReady } = useAuth();
-
-  // if (!authReady) {
-  //   return <p>Cargando...</p>; // evita flicker
-  // }
-
+  
   if (!authReady) {
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
@@ -22,7 +16,6 @@ const ProtectedRoute = ({ roles }) => {
     </div>
   );
 }
-
 
   if (!usuario) {
     return <Navigate to="/" replace />;

@@ -24,8 +24,7 @@ export default function ListaEstudiantes() {
     const fetchEstudiantes = useCallback(() => {
         obtenerEstudiantes()
             .then((data) => {
-                console.log(data);
-                
+
                 const estudiantesConId = data.map((item, index) => ({
                     ...item,
                     id: item.id || index,

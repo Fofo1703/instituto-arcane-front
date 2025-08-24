@@ -1,8 +1,8 @@
-
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { logoutUsuario, verificarSesion } from "../services/loginServices";
+import { setAccessToken } from "../services/axiosInstance";
 
 const AuthContext = createContext(null);
 
@@ -11,35 +11,42 @@ export const AuthProvider = ({ children }) => {
   const [usuario, setUsuario] = useState(null);
   const navigate = useNavigate();
 
-  const login = ( userInfo) => {
+  const login = (userInfo, accessToken) => {
     setUsuario(userInfo);
+    setAccessToken(accessToken);
     setAuthReady(true);
   };
 
   const logout = async () => {
     try {
-      await logoutUsuario();
+      const result = await logoutUsuario();
+      if (result.success) {
+        // Solo limpiar el frontend si el backend cerró la sesión
+        setUsuario(null);
+        setAccessToken(null);
+        setAuthReady(false);
+        navigate("/");
+      }
     } catch (err) {
-      console.error("Error en logout:", err);
-    } finally {
-      sessionStorage.removeItem("usuario");
-      setUsuario(null);
-      setAuthReady(false);
-      navigate("/");
+      Swal.fire("Error", "No se pudo conectar con el servidor", "error");
     }
   };
 
   useEffect(() => {
-    async function checkSesion() {
+    const checkSesion = async () => {
+      
       const res = await verificarSesion();
       if (res.ok) {
         setUsuario(res.usuario);
+        setAccessToken(res.accessToken); // guardamos el nuevo token en memoria
         setAuthReady(true);
       } else {
         setUsuario(null);
-        setAuthReady(true);
+        setAccessToken(null);
+        // setAuthReady(false);
       }
-    }
+    };
+
     checkSesion();
   }, []);
 
@@ -51,4 +58,3 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-

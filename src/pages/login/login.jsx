@@ -34,9 +34,9 @@ export default function Login() {
     validarCredenciales(credenciales)
       .then((response) => {
         if (response.success) {
-        
+
           // ✅ Guardamos usuario en el contexto (el accessToken ya está en memoria por loginServices)
-          login(response.usuario);
+          login(response.usuario, response.accessToken);
 
           // Redirigir a la página inicial
           navigate("/estudiantes/listaEstudiantes");

@@ -2,12 +2,11 @@ import { useAuth } from "../context/authContext";
 import { useEffect } from "react";
 
 const AutoLogout = () => {
-  const { logout, accessToken } = useAuth();
+  const { logout } = useAuth();
 
   useEffect(() => {
-    if (!accessToken) return;
 
-    const LOGOUT_TIME = 30 * 60 * 1000; // 30 minutos
+    const LOGOUT_TIME = 20 * 60 * 1000; // 30 minutos
     const logoutTimer = setTimeout(() => {
       logout();
       window.location.href = "/";
@@ -30,7 +29,7 @@ const AutoLogout = () => {
       window.removeEventListener("scroll", resetTimer);
       window.removeEventListener("click", resetTimer);
     };
-  }, [accessToken, logout]);
+  }, [logout]);
 
   return null;
 };
